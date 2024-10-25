@@ -1,3 +1,5 @@
+import { NextResponse } from 'next/server'
+throw new Error('booooom!')
 export default function () {
-  // placeholder for testing
+  return NextResponse.next()
 }
