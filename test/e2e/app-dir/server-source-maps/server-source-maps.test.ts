@@ -2,7 +2,22 @@ import * as path from 'path'
 import { nextTestSetup } from 'e2e-utils'
 
 describe('app-dir - server source maps', () => {
+  const dependencies = (global as any).isNextDeploy
+    ? // `link` is incompatible with the npm version used when this test is deployed
+      {
+        'internal-pkg': 'file:./internal-pkg',
+      }
+    : // But link: is not suitable for this test since this makes internal-pkg
+      // not appear in node_modules.
+      // file: is not compatible with our test infra.
+      // You can manually test though by running
+      // pnpm install --ignore-workspace in the fixture directory
+      // and running pnpm next dev <fixture> inside the monorepo
+      {
+        'internal-pkg': 'link:./internal-pkg',
+      }
   const { skipped, next, isNextDev } = nextTestSetup({
+    dependencies,
     files: path.join(__dirname, 'fixtures/default'),
     // Deploy tests don't have access to runtime logs.
     // Manually verify that the runtime logs match.
@@ -39,5 +54,9 @@ describe('app-dir - server source maps', () => {
       // TODO: isNextDev ? 'NamedError [MyError]: Bar' : '[MyError]: Bar'
       isNextDev ? 'Error [MyError]: Bar' : 'Error [MyError]: Bar'
     )
+  })
+
+  it('respects ignore-listed frames', async () => {
+    await next.render('/rsc-error-log-ignore-listed')
   })
 })

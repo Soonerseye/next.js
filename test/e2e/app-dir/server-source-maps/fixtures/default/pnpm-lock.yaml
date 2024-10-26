@@ -1,0 +1,22 @@
+lockfileVersion: '9.0'
+
+settings:
+  autoInstallPeers: true
+  excludeLinksFromLockfile: false
+
+importers:
+
+  .:
+    dependencies:
+      internal-pkg:
+        specifier: file:./internal-pkg
+        version: file:internal-pkg
+
+packages:
+
+  internal-pkg@file:internal-pkg:
+    resolution: {directory: internal-pkg, type: directory}
+
+snapshots:
+
+  internal-pkg@file:internal-pkg: {}
